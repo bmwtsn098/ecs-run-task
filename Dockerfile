@@ -1,5 +1,5 @@
 # Build Stage:
-FROM golang:1.18
+FROM golang:1.18 as builder
 
 ## Install build dependencies.
 RUN apt-get update && \
@@ -11,3 +11,7 @@ WORKDIR /ecs-run-task
 
 ## Build Step
 RUN make
+
+# Package Stage
+FROM debian:bookworm-slim
+COPY --from=builder /ecs-run-task/ecs-run-task /
